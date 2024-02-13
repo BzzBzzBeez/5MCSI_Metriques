@@ -8,39 +8,22 @@ import sqlite3
 app = Flask(__name__)                                                                                                                  
 
 
-def check_auth(username, password):
-    """Cette fonction est appelée pour vérifier si un nom d'utilisateur /
-    mot de passe fourni est valide."""
-    return username == 'admin' and password == 'admin'
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if username == 'admin' and password == 'admin':
+            session['authenticated'] = True
+            return redirect(url_for('rapport_page'))
+        else:
+            return 'Identifiants incorrects'
+    return render_template('login.html')
 
-def authenticate():
-    """Envoie une réponse 401 qui permet une authentification de base"""
-    return Response(
-    'Could not verify your access level for that URL.\n'
-    'You have to login with proper credentials', 401,
-    {'WWW-Authenticate': 'Basic realm="Login Required"'})
-
-def check_auth(username, password):
-    """Cette fonction est appelée pour vérifier si un nom d'utilisateur /
-    mot de passe fourni est valide."""
-    return username == 'admin' and password == 'admin'
-
-def authenticate():
-    """Envoie une réponse 401 qui permet une authentification de base"""
-    return Response(
-    'Could not verify your access level for that URL.\n'
-    'You have to login with proper credentials', 401,
-    {'WWW-Authenticate': 'Basic realm="Login Required"'})
-
-def requires_auth(f):
-    """Décorateur pour vérifier les identifiants de l'utilisateur"""
-    def decorated(*args, **kwargs):
-        auth = request.authorization
-        if not auth or not check_auth(auth.username, auth.password):
-            return authenticate()
-        return f(*args, **kwargs)
-    return decorated
-
+@app.route('/logout')
+def logout():
+    session.pop('authenticated', None)
+    return redirect(url_for('login'))
 
 @app.route('/')
 def hello_world():
@@ -62,10 +45,11 @@ def meteo():
         results.append({'Jour': dt_value, 'temp': temp_day_value})
     return jsonify(results=results)
 
-@app.route("/rapport/")
-@requires_auth
+@app.route('/rapport/')
 def mongraphique():
-    return render_template("graphique.html")
+    if 'authenticated' in session:
+        return render_template('graphique.html')
+    return redirect(url_for('login'))
 
 @app.route("/histogramme/")
 def histogramme():
