@@ -8,23 +8,6 @@ import sqlite3
 app = Flask(__name__)                                                                                                                  
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        if username == 'admin' and password == 'admin':
-            session['authenticated'] = True
-            return redirect(url_for('graphique.html'))
-        else:
-            return 'Identifiants incorrects'
-    return render_template('login.html')
-
-@app.route('/logout')
-def logout():
-    session.pop('authenticated', None)
-    return redirect(url_for('login'))
-
 @app.route('/')
 def hello_world():
     return render_template('hello.html')
@@ -47,9 +30,7 @@ def meteo():
 
 @app.route('/rapport/')
 def mongraphique():
-    if 'authenticated' in session:
-        return render_template('graphique.html')
-    return redirect(url_for('login'))
+    return render_template('graphique.html')
 
 @app.route("/histogramme/")
 def histogramme():
