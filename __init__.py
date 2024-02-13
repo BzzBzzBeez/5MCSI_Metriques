@@ -15,7 +15,7 @@ def login():
         password = request.form['password']
         if username == 'admin' and password == 'admin':
             session['authenticated'] = True
-            return redirect(url_for('rapport_page'))
+            return redirect(url_for('graphique.html'))
         else:
             return 'Identifiants incorrects'
     return render_template('login.html')
