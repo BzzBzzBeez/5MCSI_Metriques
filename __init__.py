@@ -66,6 +66,27 @@ def page_not_found(e):
     # Remarque : le 404 après la fonction render_template() signifie
     # que nous répondons avec le status code 404.
     return render_template('404.html'), 404
+
+def check_auth(username, password):
+    """Cette fonction est appelée pour vérifier si un nom d'utilisateur /
+    mot de passe fourni est valide."""
+    return username == 'admin' and password == 'admin'
+
+def authenticate():
+    """Envoie une réponse 401 qui permet une authentification de base"""
+    return Response(
+    'Could not verify your access level for that URL.\n'
+    'You have to login with proper credentials', 401,
+    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def requires_auth(f):
+    """Décorateur pour vérifier les identifiants de l'utilisateur"""
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
   
 if __name__ == "__main__":
   app.run(debug=True)
