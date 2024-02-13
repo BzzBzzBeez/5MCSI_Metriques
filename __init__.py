@@ -37,7 +37,11 @@ def histogramme():
 
 @app.route('/commits/')
 def commits_chart():
-    url = "https://api.github.com/repos/BzzBzzBeez/5MCSI_Metriques/commits"
+    return render_template('commits_chart.html')
+
+@app.route('/api/commits/')
+def api_commits():
+    url = "https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits"
     response = requests.get(url)
     commits_data = response.json()
     commits_by_minute = {}
