@@ -37,7 +37,7 @@ def histogramme():
 
 @app.route('/extract-minutes/<date_string>')
 def extract_minutes(date_string):
-    url = "https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits"
+    url = "https://api.github.com/repos/BzzBzzBeez/5MCSI_Metriques/commits"
     response = requests.get(url)
     commits_data = response.json()
     commits_by_minute = {}
