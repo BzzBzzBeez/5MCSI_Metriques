@@ -28,6 +28,7 @@ def meteo():
     return jsonify(results=results)
 
 @app.route("/rapport/")
+@requires_auth
 def mongraphique():
     return render_template("graphique.html")
 
