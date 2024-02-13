@@ -60,6 +60,12 @@ def api_commits():
         return jsonify(commits_by_minute)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # Remarque : le 404 après la fonction render_template() signifie
+    # que nous répondons avec le status code 404.
+    return render_template('404.html'), 404
   
 if __name__ == "__main__":
   app.run(debug=True)
