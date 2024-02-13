@@ -35,8 +35,8 @@ def mongraphique():
 def histogramme():
     return render_template("histogramme.html")
 
-@app.route('/extract-minutes/<date_string>')
-def extract_minutes(date_string):
+@app.route('/commits/')
+def commits_chart():
     url = "https://api.github.com/repos/BzzBzzBeez/5MCSI_Metriques/commits"
     response = requests.get(url)
     commits_data = response.json()
