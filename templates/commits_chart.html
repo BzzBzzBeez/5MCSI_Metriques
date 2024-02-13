@@ -12,7 +12,7 @@
             data.addColumn('string', 'Minute');
             data.addColumn('number', 'Commits');
 
-            fetch('/commits/')
+            fetch('/api/commits/')
             .then(response => response.json())
             .then(commits_by_minute => {
                 Object.keys(commits_by_minute).forEach(minute => {
